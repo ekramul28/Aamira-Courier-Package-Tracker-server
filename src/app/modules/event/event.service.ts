@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Event } from './event.model';
 import { Server } from 'socket.io';
 import { EVENT_TYPES } from './event.constant';
