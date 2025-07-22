@@ -1,13 +1,11 @@
 import { Schema, model } from 'mongoose';
-import { BloodGroup, Gender } from './faculty.constant';
-import { FacultyModel, TFaculty, TUserName } from './faculty.interface';
+import { CustomerModel, TCustomer, TUserName } from './customer.interface';
 
 const userNameSchema = new Schema<TUserName>({
   firstName: {
     type: String,
     required: [true, 'First Name is required'],
     trim: true,
-    maxlength: [20, 'Name can not be more than 20 characters'],
   },
   middleName: {
     type: String,
@@ -17,11 +15,10 @@ const userNameSchema = new Schema<TUserName>({
     type: String,
     trim: true,
     required: [true, 'Last Name is required'],
-    maxlength: [20, 'Name can not be more than 20 characters'],
   },
 });
 
-const facultySchema = new Schema<TFaculty, FacultyModel>(
+const customerSchema = new Schema<TCustomer, CustomerModel>(
   {
     id: {
       type: String,
@@ -34,21 +31,14 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       unique: true,
       ref: 'User',
     },
-    designation: {
-      type: String,
-      required: [true, 'Designation is required'],
-    },
     name: {
       type: userNameSchema,
       required: [true, 'Name is required'],
     },
     gender: {
       type: String,
-      enum: {
-        values: Gender,
-        message: '{VALUE} is not a valid gender',
-      },
-      required: [true, 'Gender is required'],
+      enum: ['male', 'female', 'other'],
+      required: true,
     },
     dateOfBirth: { type: Date },
     email: {
@@ -61,13 +51,6 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       type: String,
       required: [true, 'Emergency contact number is required'],
     },
-    bloodGroup: {
-      type: String,
-      enum: {
-        values: BloodGroup,
-        message: '{VALUE} is not a valid blood group',
-      },
-    },
     presentAddress: {
       type: String,
       required: [true, 'Present address is required'],
@@ -77,16 +60,6 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
       required: [true, 'Permanent address is required'],
     },
     profileImg: { type: String, default: '' },
-    academicDepartment: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'Acadcemic Department is required'],
-      ref: 'AcademicDepartment',
-    },
-    academicFaculty: {
-      type: Schema.Types.ObjectId,
-      required: [true, 'Acadcemic Faculty is required'],
-      ref: 'AcademicFaculty',
-    },
     isDeleted: {
       type: Boolean,
       default: false,
@@ -96,40 +69,46 @@ const facultySchema = new Schema<TFaculty, FacultyModel>(
     toJSON: {
       virtuals: true,
     },
+    toObject: {
+      virtuals: true,
+    },
   },
 );
 
-// generating full name
-facultySchema.virtual('fullName').get(function () {
+// virtual
+customerSchema.virtual('fullName').get(function () {
   return (
     this?.name?.firstName +
-    '' +
+    ' ' +
     this?.name?.middleName +
-    '' +
+    ' ' +
     this?.name?.lastName
   );
 });
 
-// filter out deleted documents
-facultySchema.pre('find', function (next) {
+// Query Middleware
+customerSchema.pre('find', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-facultySchema.pre('findOne', function (next) {
+customerSchema.pre('findOne', function (next) {
   this.find({ isDeleted: { $ne: true } });
   next();
 });
 
-facultySchema.pre('aggregate', function (next) {
+customerSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
 });
 
-//checking if user is already exist!
-facultySchema.statics.isUserExists = async function (id: string) {
-  const existingUser = await Faculty.findOne({ id });
+//creating a custom static method
+customerSchema.statics.isUserExists = async function (id: string) {
+  const existingUser = await Customer.findOne({ id });
   return existingUser;
 };
 
-export const Faculty = model<TFaculty, FacultyModel>('Faculty', facultySchema);
+export const Customer = model<TCustomer, CustomerModel>(
+  'Customer',
+  customerSchema,
+);

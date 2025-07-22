@@ -3,36 +3,19 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { UserServices } from './user.service';
 
-const createStudent = catchAsync(async (req, res) => {
-  const { password, student: studentData } = req.body;
-  console.log('inside controller', req.body);
-  const result = await UserServices.createStudentIntoDB(
+const createCustomer = catchAsync(async (req, res) => {
+  const { password, customer: customerData } = req.body;
+
+  const result = await UserServices.createCustomerIntoDB(
     req.file,
     password,
-    studentData,
+    customerData,
   );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is created successfully',
-    data: result,
-  });
-});
-
-const createFaculty = catchAsync(async (req, res) => {
-  const { password, faculty: facultyData } = req.body;
-
-  const result = await UserServices.createFacultyIntoDB(
-    req.file,
-    password,
-    facultyData,
-  );
-
-  sendResponse(res, {
-    statusCode: httpStatus.OK,
-    success: true,
-    message: 'Faculty is created successfully',
+    message: 'Customer is created successfully',
     data: result,
   });
 });
@@ -67,8 +50,7 @@ const getMe = catchAsync(async (req, res) => {
 });
 
 const changeStatus = catchAsync(async (req, res) => {
-  const id = req.params.id;
-
+  const { id } = req.params;
   const result = await UserServices.changeStatus(id, req.body);
 
   sendResponse(res, {
@@ -78,9 +60,9 @@ const changeStatus = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 export const UserControllers = {
-  createStudent,
-  createFaculty,
+  createCustomer,
   createAdmin,
   getMe,
   changeStatus,

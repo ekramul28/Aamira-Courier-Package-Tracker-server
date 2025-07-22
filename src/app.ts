@@ -7,6 +7,7 @@ import router from './app/routes';
 
 const app: Application = express();
 
+// This app instance can be used for both HTTP and WebSocket servers
 // CORS setup - must come before routes
 app.use(
   cors({

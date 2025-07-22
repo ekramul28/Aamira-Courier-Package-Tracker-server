@@ -1,3 +1,5 @@
+// If you want to use only the WebSocket server, run sockets.ts instead of this file.
+// To combine HTTP and WebSocket in one process, you can import and use the WebSocket server from sockets.ts here.
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';

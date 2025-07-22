@@ -1,46 +1,11 @@
 // import { TAcademicSemester } from '../AcademicSemester/academicSemester.interface';
+import { TUser } from './user.interface';
 import { User } from './user.model';
 
-const findLastStudentId = async () => {
-  const lastStudent = await User.findOne(
+const findLastCustomer = async () => {
+  const lastCustomer = await User.findOne(
     {
-      role: 'student',
-      // id: { $regex: `^${semesterCode}` }, // matches IDs starting with this semester code
-    },
-    {
-      id: 1,
-      _id: 0,
-    },
-  )
-    .sort({ createdAt: -1 }) // get the latest by creation time
-    .lean();
-
-  return lastStudent?.id ? lastStudent.id : undefined;
-};
-
-export const generateStudentId = async () => {
-  // const semesterCode = payload.code;
-
-  let currentId = (0).toString();
-  const lastStudentId = await findLastStudentId();
-  // const lastFacultyId = await findLastFacultyId();
-
-  if (lastStudentId) {
-    currentId = lastStudentId.substring(2);
-  }
-
-  let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
-
-  incrementId = `S-${incrementId}`;
-
-  return incrementId;
-};
-
-// Faculty ID
-export const findLastFacultyId = async () => {
-  const lastFaculty = await User.findOne(
-    {
-      role: 'faculty',
+      role: 'customer',
     },
     {
       id: 1,
@@ -52,26 +17,24 @@ export const findLastFacultyId = async () => {
     })
     .lean();
 
-  return lastFaculty?.id ? lastFaculty.id.substring(2) : undefined;
+  return lastCustomer?.id ? lastCustomer.id.substring(2) : undefined;
 };
 
-export const generateFacultyId = async () => {
+export const generateCustomerLastId = async () => {
   let currentId = (0).toString();
-  const lastFacultyId = await findLastFacultyId();
+  const lastCustomerId = await findLastCustomer();
 
-  if (lastFacultyId) {
-    currentId = lastFacultyId.substring(2);
+  if (lastCustomerId) {
+    currentId = lastCustomerId;
   }
 
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
-  incrementId = `F-${incrementId}`;
-
+  incrementId = `C-${incrementId}`;
   return incrementId;
 };
 
-// Admin ID
-export const findLastAdminId = async () => {
+const findLastAdmin = async () => {
   const lastAdmin = await User.findOne(
     {
       role: 'admin',
@@ -91,7 +54,7 @@ export const findLastAdminId = async () => {
 
 export const generateAdminId = async () => {
   let currentId = (0).toString();
-  const lastAdminId = await findLastAdminId();
+  const lastAdminId = await findLastAdmin();
 
   if (lastAdminId) {
     currentId = lastAdminId.substring(2);
@@ -100,5 +63,6 @@ export const generateAdminId = async () => {
   let incrementId = (Number(currentId) + 1).toString().padStart(4, '0');
 
   incrementId = `A-${incrementId}`;
+
   return incrementId;
 };
