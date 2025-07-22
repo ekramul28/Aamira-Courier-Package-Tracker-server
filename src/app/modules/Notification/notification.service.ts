@@ -1,5 +1,6 @@
-import { Notification } from './notification.model';
+// import { Notification } from './notification.model';
 import { Server } from 'socket.io';
+import { Notification } from './notification.model';
 
 export const sendNotification = async (
   io: Server,
