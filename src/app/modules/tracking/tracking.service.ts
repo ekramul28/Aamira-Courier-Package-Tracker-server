@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Tracking } from './tracking.model';
 import { Server } from 'socket.io';
 import { TRACKING_EVENTS } from './tracking.constant';
