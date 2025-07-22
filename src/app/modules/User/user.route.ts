@@ -3,10 +3,12 @@ import express from 'express';
 import { UserControllers } from './user.controller';
 import { createCustomerValidationSchema } from '../Customer/customer.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
-import { auth } from '../../middlewares/auth';
+// import { auth } from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
-import { validateRequest } from '../../middlewares/validateRequest';
+// import { validateRequest } from '../../middlewares/validateRequest';
 import { upload } from '../../utils/sendImageToCloudinary';
+import validateRequest from '../../middlewares/validateRequest';
+import auth from '../../middlewares/auth';
 
 const router = express.Router();
 
