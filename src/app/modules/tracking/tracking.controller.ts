@@ -1,6 +1,10 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { createTrackingUpdate, getTrackingHistory } from './tracking.service';
+import {
+  createTrackingUpdate,
+  getTrackingHistory,
+  getActivePackages,
+} from './tracking.service';
 import { Server } from 'socket.io';
 
 const postTrackingUpdate = (io: Server) =>
@@ -26,7 +30,18 @@ const getTracking = catchAsync(async (req, res) => {
   });
 });
 
+const getActivePackagesController = catchAsync(async (req, res) => {
+  const activePackages = await getActivePackages();
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Active packages fetched successfully',
+    data: activePackages,
+  });
+});
+
 export const TrackingControllers = {
   postTrackingUpdate,
   getTracking,
+  getActivePackagesController,
 };

@@ -45,9 +45,13 @@ const resetPasswordValidationSchema = z.object({
 
 const registerValidationSchema = z.object({
   body: z.object({
-    name: z.string({ required_error: 'Name is required' }),
+    name: z.string({ required_error: 'Name is required.' }),
     email: z.string({ required_error: 'Email is required' }).email(),
     password: z.string({ required_error: 'Password is required' }),
+    role: z.enum(
+      ['superAdmin', 'admin', 'customer', 'courier', 'dispatcher', 'system'],
+      { required_error: 'Role is required.' },
+    ),
     // Add other fields as needed
   }),
 });

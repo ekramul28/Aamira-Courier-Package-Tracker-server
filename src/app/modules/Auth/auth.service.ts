@@ -108,10 +108,10 @@ const refreshToken = async (token: string) => {
   // checking if the given token is valid
   const decoded = verifyToken(token, config.jwt_refresh_secret as string);
 
-  const { userId, iat } = decoded;
+  const { email, iat } = decoded;
 
-  // checking if the user is exist
-  const user = await User.isUserExistsByCustomId(userId);
+  // checking if the user exists
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
@@ -130,15 +130,10 @@ const refreshToken = async (token: string) => {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
   }
 
-  if (
-    user.passwordChangedAt &&
-    User.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt, iat as number)
-  ) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
-  }
+  // No passwordChangedAt logic
 
   const jwtPayload = {
-    userId: user.id,
+    email: user.email,
     role: user.role,
   };
 
@@ -153,9 +148,9 @@ const refreshToken = async (token: string) => {
   };
 };
 
-const forgetPassword = async (userId: string) => {
-  // checking if the user is exist
-  const user = await User.isUserExistsByCustomId(userId);
+const forgetPassword = async (email: string) => {
+  // checking if the user exists
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
@@ -175,7 +170,7 @@ const forgetPassword = async (userId: string) => {
   }
 
   const jwtPayload = {
-    userId: user.id,
+    email: user.email,
     role: user.role,
   };
 
@@ -185,7 +180,7 @@ const forgetPassword = async (userId: string) => {
     '10m',
   );
 
-  const resetUILink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken} `;
+  const resetUILink = `${config.reset_pass_ui_link}?email=${user.email}&token=${resetToken} `;
 
   sendEmail(user.email, resetUILink);
 
@@ -251,6 +246,13 @@ const registerUser = async (payload: {
   name: string;
   email: string;
   password: string;
+  role:
+    | 'superAdmin'
+    | 'admin'
+    | 'customer'
+    | 'courier'
+    | 'dispatcher'
+    | 'system';
 }) => {
   // Check if user already exists
   const existing = await User.findOne({ email: payload.email });
@@ -267,6 +269,7 @@ const registerUser = async (payload: {
     name: payload.name,
     email: payload.email,
     password: hashedPassword,
+    role: payload.role,
     // Add other fields as needed
   });
   console.log(user);

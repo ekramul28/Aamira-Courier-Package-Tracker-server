@@ -24,7 +24,14 @@ const userSchema = new Schema<TUser, UserModel>(
 
     role: {
       type: String,
-      enum: ['superAdmin', 'customer', 'admin'],
+      enum: [
+        'superAdmin',
+        'customer',
+        'admin',
+        'courier',
+        'dispatcher',
+        'system',
+      ],
       default: 'customer',
     },
     status: {

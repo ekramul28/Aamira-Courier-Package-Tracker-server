@@ -8,7 +8,13 @@ export interface TUser {
   email: string;
   password: string;
 
-  role: 'superAdmin' | 'admin' | 'customer';
+  role:
+    | 'superAdmin'
+    | 'admin'
+    | 'customer'
+    | 'courier'
+    | 'dispatcher'
+    | 'system';
   status: 'in-progress' | 'blocked';
   isDeleted: boolean;
 }
