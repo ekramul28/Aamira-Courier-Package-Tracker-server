@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const loginValidationSchema = z.object({
   body: z.object({
-    id: z.string({ required_error: 'Id is required.' }),
+    email: z.string({ required_error: 'Email is required.' }).email(),
     password: z.string({ required_error: 'Password is required' }),
   }),
 });
@@ -43,10 +43,20 @@ const resetPasswordValidationSchema = z.object({
   }),
 });
 
+const registerValidationSchema = z.object({
+  body: z.object({
+    name: z.string({ required_error: 'Name is required' }),
+    email: z.string({ required_error: 'Email is required' }).email(),
+    password: z.string({ required_error: 'Password is required' }),
+    // Add other fields as needed
+  }),
+});
+
 export const AuthValidation = {
   loginValidationSchema,
   changePasswordValidationSchema,
   refreshTokenValidationSchema,
   forgetPasswordValidationSchema,
   resetPasswordValidationSchema,
+  registerValidationSchema,
 };

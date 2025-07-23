@@ -38,4 +38,10 @@ router.post(
   AuthControllers.resetPassword,
 );
 
+router.post(
+  '/register',
+  validateRequest(AuthValidation.registerValidationSchema),
+  AuthControllers.registerUser,
+);
+
 export const AuthRoutes = router;

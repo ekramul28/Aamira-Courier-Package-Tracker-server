@@ -3,6 +3,7 @@
 import { Server } from 'http';
 import mongoose from 'mongoose';
 import app from './app';
+import http from 'http';
 import seedSuperAdmin from './app/DB';
 import config from './app/config';
 
@@ -13,7 +14,8 @@ async function main() {
     await mongoose.connect(config.database_url as string);
 
     seedSuperAdmin();
-    server = app.listen(config.port, () => {
+    server = http.createServer(app);
+    server.listen(config.port, () => {
       console.log(`app is listening on port ${config.port}`);
     });
   } catch (err) {

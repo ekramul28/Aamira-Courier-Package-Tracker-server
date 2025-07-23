@@ -3,6 +3,9 @@ import { UserRoutes } from '../modules/User/user.route';
 import { AdminRoutes } from '../modules/Admin/admin.route';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { CustomerRoutes } from '../modules/Customer/customer.route';
+import { EventRoutes } from '../modules/event/event.route';
+import { NotificationRoutes } from '../modules/Notification/notification.route';
+import { TrackingRoutes } from '../modules/tracking/tracking.route';
 
 const router = Router();
 
@@ -22,6 +25,18 @@ const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/events',
+    route: EventRoutes,
+  },
+  {
+    path: '/notification',
+    route: NotificationRoutes,
+  },
+  {
+    path: '/tracking',
+    route: TrackingRoutes,
   },
 ];
 

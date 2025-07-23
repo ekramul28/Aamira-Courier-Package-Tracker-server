@@ -1,10 +1,10 @@
 import express from 'express';
-import { getNotifications } from './notification.controller';
+import { NotificationControllers } from './notification.controller';
 import auth from '../../middlewares/auth';
-// import { auth } from '../../middlewares/auth';
 
 const router = express.Router();
 
-router.get('/', auth(), getNotifications);
+router.get('/', auth(), NotificationControllers.getNotifications);
+router.post('/', auth(), NotificationControllers.postNotification);
 
 export const NotificationRoutes = router;

@@ -3,7 +3,7 @@ import sendResponse from '../../utils/sendResponse';
 import { createTrackingUpdate, getTrackingHistory } from './tracking.service';
 import { Server } from 'socket.io';
 
-export const postTrackingUpdate = (io: Server) =>
+const postTrackingUpdate = (io: Server) =>
   catchAsync(async (req, res) => {
     const trackingData = req.body;
     const update = await createTrackingUpdate(io, trackingData);
@@ -15,7 +15,7 @@ export const postTrackingUpdate = (io: Server) =>
     });
   });
 
-export const getTracking = catchAsync(async (req, res) => {
+const getTracking = catchAsync(async (req, res) => {
   const { packageId } = req.params;
   const history = await getTrackingHistory(packageId);
   sendResponse(res, {
@@ -25,3 +25,8 @@ export const getTracking = catchAsync(async (req, res) => {
     data: history,
   });
 });
+
+export const TrackingControllers = {
+  postTrackingUpdate,
+  getTracking,
+};

@@ -7,8 +7,8 @@ import { AuthServices } from './auth.service';
 
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
-  const { refreshToken, accessToken, needsPasswordChange } = result;
-
+  const { refreshToken, accessToken } = result;
+  console.log({ result });
   res.cookie('refreshToken', refreshToken, {
     secure: config.NODE_ENV === 'production',
     httpOnly: true,
@@ -21,8 +21,8 @@ const loginUser = catchAsync(async (req, res) => {
     success: true,
     message: 'User is logged in successfully!',
     data: {
+      refreshToken,
       accessToken,
-      needsPasswordChange,
     },
   });
 });
@@ -78,10 +78,21 @@ const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
+const registerUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.registerUser(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.CREATED,
+    success: true,
+    message: 'User registered successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   loginUser,
   changePassword,
   refreshToken,
   forgetPassword,
   resetPassword,
+  registerUser,
 };

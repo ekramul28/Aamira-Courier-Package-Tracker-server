@@ -1,8 +1,9 @@
+import { io } from '../../../sockets';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
-import { getUserNotifications } from './notification.service';
+import { getUserNotifications, sendNotification } from './notification.service';
 
-export const getNotifications = catchAsync(async (req, res) => {
+const getNotifications = catchAsync(async (req, res) => {
   const userId = req.user.userId;
   const notifications = await getUserNotifications(userId);
   sendResponse(res, {
@@ -12,3 +13,20 @@ export const getNotifications = catchAsync(async (req, res) => {
     data: notifications,
   });
 });
+
+const postNotification = catchAsync(async (req, res) => {
+  const { userId, message } = req.body;
+  const io2 = io;
+  const notification = await sendNotification(io2, userId, message);
+  sendResponse(res, {
+    statusCode: 201,
+    success: true,
+    message: 'Notification sent successfully',
+    data: notification,
+  });
+});
+
+export const NotificationControllers = {
+  getNotifications,
+  postNotification,
+};

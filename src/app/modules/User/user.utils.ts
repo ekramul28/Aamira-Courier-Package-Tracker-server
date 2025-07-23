@@ -1,5 +1,5 @@
 // import { TAcademicSemester } from '../AcademicSemester/academicSemester.interface';
-import { TUser } from './user.interface';
+// import { TUser } from './user.interface';
 import { User } from './user.model';
 
 const findLastCustomer = async () => {

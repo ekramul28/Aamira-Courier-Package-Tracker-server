@@ -7,10 +7,9 @@ import { TUser, UserModel } from './user.interface';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
-    id: {
+    name: {
       type: String,
       required: true,
-      unique: true,
     },
     email: {
       type: String,
@@ -22,16 +21,11 @@ const userSchema = new Schema<TUser, UserModel>(
       required: true,
       select: 0,
     },
-    needsPasswordChange: {
-      type: Boolean,
-      default: true,
-    },
-    passwordChangedAt: {
-      type: Date,
-    },
+
     role: {
       type: String,
-      enum: ['superAdmin', 'student', 'faculty', 'admin'],
+      enum: ['superAdmin', 'customer', 'admin'],
+      default: 'customer',
     },
     status: {
       type: String,

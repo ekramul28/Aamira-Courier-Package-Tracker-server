@@ -5,60 +5,50 @@ import config from '../../config';
 import AppError from '../../errors/AppError';
 import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../User/user.model';
-import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
+import { TLoginUser } from './auth.interface';
 
 const loginUser = async (payload: TLoginUser) => {
-  // checking if the user is exist
-  const user = await User.isUserExistsByCustomId(payload.id);
-
+  console.log(payload);
+  // checking if the user exists
+  const user = await User.findOne({ email: payload.email }).select('+password');
+  console.log({ user });
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
   // checking if the user is already deleted
-
   const isDeleted = user?.isDeleted;
-
   if (isDeleted) {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
   }
-
   // checking if the user is blocked
-
   const userStatus = user?.status;
-
   if (userStatus === 'blocked') {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked ! !');
   }
 
   //checking if the password is correct
-
   if (!(await User.isPasswordMatched(payload?.password, user?.password)))
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
-
   //create token and sent to the  client
-
   const jwtPayload = {
-    userId: user.id,
+    email: user.email,
     role: user.role,
   };
-
   const accessToken = createToken(
     jwtPayload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
-
+  console.log({ accessToken });
   const refreshToken = createToken(
     jwtPayload,
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
-
   return {
     accessToken,
     refreshToken,
-    needsPasswordChange: user?.needsPasswordChange,
   };
 };
 
@@ -257,10 +247,37 @@ const resetPassword = async (
   );
 };
 
+const registerUser = async (payload: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  // Check if user already exists
+  const existing = await User.findOne({ email: payload.email });
+  if (existing) {
+    throw new AppError(httpStatus.CONFLICT, 'User already exists!');
+  }
+  // Hash password
+  const hashedPassword = await bcrypt.hash(
+    payload.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  // Create user
+  const user = await User.create({
+    name: payload.name,
+    email: payload.email,
+    password: hashedPassword,
+    // Add other fields as needed
+  });
+  console.log(user);
+  return user;
+};
+
 export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
   forgetPassword,
   resetPassword,
+  registerUser,
 };
