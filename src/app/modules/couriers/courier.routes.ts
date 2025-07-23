@@ -1,12 +1,13 @@
 import express from 'express';
 import auth from '../../middlewares/auth';
-import { USER_ROLE } from '../users/user.constant';
+
 import {
   getAllCouriers,
   getSingleCourier,
   updateCourier,
   deleteCourier,
 } from './courier.controller';
+import { USER_ROLE } from '../User/user.constant';
 
 const router = express.Router();
 
