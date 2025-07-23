@@ -1,12 +1,12 @@
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 
-export const getDashboard = catchAsync(async (req, res) => {
-  // Implement dashboard logic here
+export const getDashboardData = catchAsync(async (req, res) => {
+  // Implement dashboard aggregation logic here
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Dashboard data fetched',
+    message: 'Dispatcher dashboard data fetched',
     data: {},
   });
 });
