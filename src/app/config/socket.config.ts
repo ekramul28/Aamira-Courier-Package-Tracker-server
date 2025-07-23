@@ -1,8 +1,6 @@
 import { Server as IOServer, Socket, ServerOptions } from 'socket.io';
 import { Server as HTTPServer } from 'http';
-import { registerNotificationSocket } from '../modules/Notification/notification.socket';
-import { registerEventSocket } from '../modules/event/event.sockets';
-import { registerTrackingSocket } from '../modules/tracking/tracking.sockets';
+
 // import { socketAuthMiddleware } from '../modules/Auth/auth.socket'; // Uncomment if you add socket auth
 // Socket.IO server options can be customized here
 
@@ -20,11 +18,6 @@ export function initSocketServer(
 
   // Optionally add authentication middleware
   // io.use(socketAuthMiddleware);
-
-  // Register all module socket handlers
-  registerNotificationSocket(io);
-  registerEventSocket(io);
-  registerTrackingSocket(io);
 
   io.on('connection', (socket: Socket) => {
     console.log(`Socket connected: ${socket.id}`);

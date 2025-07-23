@@ -3,9 +3,10 @@ import { USER_ROLE } from '../modules/users/user.constant';
 import { User } from '../modules/users/user.model';
 
 const superUser = {
+  name: 'dispatcher',
   email: 'superAdmin@gmail.com',
   password: config.super_admin_password,
-  needsPasswordChange: false,
+
   role: USER_ROLE.dispatcher,
   status: 'in-progress',
   isDeleted: false,

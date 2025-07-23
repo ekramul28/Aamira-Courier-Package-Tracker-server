@@ -1,7 +1,7 @@
 import http from 'http';
 import { initSocketServer } from './app/config/socket.config';
 import app from './app';
-import { startStuckPackageAlertJob } from './app/modules/tracking/alert.job';
+
 // Create HTTP server using the Express app
 const server = http.createServer(app);
 const socketOptions = {
@@ -13,9 +13,6 @@ const socketOptions = {
 
 // Initialize Socket.IO server
 const io = initSocketServer(server, socketOptions);
-
-// Start stuck package alert job
-startStuckPackageAlertJob(io);
 
 // Start the server
 const PORT = process.env.SOCKET_PORT || 5000;
