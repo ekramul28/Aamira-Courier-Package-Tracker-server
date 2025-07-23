@@ -18,8 +18,8 @@ router.post(
   auth(
     USER_ROLE.superAdmin,
     USER_ROLE.admin,
-    USER_ROLE.faculty,
-    USER_ROLE.student,
+    USER_ROLE.dispatcher,
+    USER_ROLE.courier,
   ),
   validateRequest(AuthValidation.changePasswordValidationSchema),
   AuthControllers.changePassword,

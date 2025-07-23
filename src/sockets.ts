@@ -1,24 +1,39 @@
-import http from 'http';
-import { initSocketServer } from './app/config/socket.config';
-import app from './app';
+// src/socket.ts
+import { Server as HTTPServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
 
-// Create HTTP server using the Express app
-const server = http.createServer(app);
-const socketOptions = {
-  cors: {
-    origin: '*', // Adjust as needed for production
-    methods: ['GET', 'POST'],
-  },
+let io: SocketIOServer;
+
+export const initSocket = (server: HTTPServer) => {
+  io = new SocketIOServer(server, {
+    cors: {
+      origin: '*', // You can restrict this in production
+      methods: ['GET', 'POST'],
+    },
+  });
+
+  io.on('connection', (socket) => {
+    console.log(`✅ New client connected: ${socket.id}`);
+
+    // Listen for example event
+    socket.on('locationUpdate', (data) => {
+      console.log('📍 Location Update:', data);
+
+      // Emit to dispatcher or other clients
+      io.emit('locationBroadcast', data);
+    });
+
+    socket.on('disconnect', () => {
+      console.log(`❌ Client disconnected: ${socket.id}`);
+    });
+  });
+
+  return io;
 };
 
-// Initialize Socket.IO server
-const io = initSocketServer(server, socketOptions);
-
-// Start the server
-const PORT = process.env.SOCKET_PORT || 5000;
-server.listen(PORT, () => {
-  console.log(`WebSocket server running on port ${PORT}`);
-});
-
-// Export io for use in other modules if needed
-export { io };
+export const getIO = (): SocketIOServer => {
+  if (!io) {
+    throw new Error('Socket.io not initialized');
+  }
+  return io;
+};
