@@ -1,6 +1,7 @@
 // src/socket.ts
 import { Server as HTTPServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+import { registerPackageSocket } from './app/modules/packages/package.socket';
 
 let io: SocketIOServer;
 
@@ -15,6 +16,8 @@ export const initSocket = (server: HTTPServer) => {
   io.on('connection', (socket) => {
     console.log(`✅ New client connected: ${socket.id}`);
 
+    // package socket registration
+    registerPackageSocket(io);
     // Listen for example event
     socket.on('locationUpdate', (data) => {
       console.log('📍 Location Update:', data);

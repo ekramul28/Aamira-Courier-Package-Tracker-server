@@ -3,7 +3,10 @@ import { PackageStatus } from './package.interface';
 
 export const createPackageValidationSchema = z.object({
   body: z.object({
-    packageId: z.string(),
+    packageId: z.string().optional(),
+    orderer_name: z.string().min(1, 'Orderer name is required'),
+    home_address: z.string().min(1, 'Home address is required'),
+    phone_number: z.string().min(1, 'Phone number is required'),
     status: z.enum([
       'CREATED',
       'PICKED_UP',
@@ -24,6 +27,9 @@ export const createPackageValidationSchema = z.object({
 
 export const updatePackageValidationSchema = z.object({
   body: z.object({
+    orderer_name: z.string().min(1, 'Orderer name is required').optional(),
+    home_address: z.string().min(1, 'Home address is required').optional(),
+    phone_number: z.string().min(1, 'Phone number is required').optional(),
     status: z
       .enum([
         'CREATED',

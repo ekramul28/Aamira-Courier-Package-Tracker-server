@@ -1,6 +1,7 @@
 import { Package } from './package.model';
 import { IPackage } from './package.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { generatePackageId } from './package.utils';
 
 const PackageSearchableFields = [
   'packageName',
@@ -9,7 +10,8 @@ const PackageSearchableFields = [
 ];
 
 const createPackage = async (data: IPackage) => {
-  return Package.create(data);
+  const packageId = await generatePackageId();
+  return Package.create({ ...data, packageId });
 };
 
 const getAllPackages = async (query: Record<string, unknown>) => {
@@ -20,10 +22,10 @@ const getAllPackages = async (query: Record<string, unknown>) => {
     .paginate()
     .fields();
 
-  const result = await packageQuery.modelQuery;
+  const data = await packageQuery.modelQuery;
   const meta = await packageQuery.countTotal();
   return {
-    result,
+    data,
     meta,
   };
 };
