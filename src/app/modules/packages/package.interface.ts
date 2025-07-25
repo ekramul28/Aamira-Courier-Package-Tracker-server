@@ -8,7 +8,7 @@ export type PackageStatus =
   | 'CANCELLED';
 
 export interface IPackage {
-  // packageId: string;
+  packageId?: string;
   status: PackageStatus;
   lat?: number;
   lon?: number;

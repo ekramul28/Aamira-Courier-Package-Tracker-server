@@ -7,6 +7,7 @@ import { sendEmail } from '../../utils/sendEmail';
 import { User } from '../User/user.model';
 import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
+import { getIO } from '../../../sockets';
 
 const loginUser = async (payload: TLoginUser) => {
   // checking if the user exists
@@ -14,6 +15,7 @@ const loginUser = async (payload: TLoginUser) => {
   const user = await User.findOne({ email: payload.email }).select(
     '+password ',
   );
+
   console.log({ user });
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
@@ -32,6 +34,7 @@ const loginUser = async (payload: TLoginUser) => {
   if (!(await User.isPasswordMatched(payload?.password, user?.password)))
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
   //create token and sent to the  client
+
   const jwtPayload = {
     email: user.email,
     role: user.role,

@@ -5,4 +5,4 @@ export const USER_ROLE = {
   courier: 'courier',
 } as const;
 
-export const UserStatus = ['in-progress', 'blocked'];
+export const UserStatus = ['in-progress', 'blocked', 'active'];

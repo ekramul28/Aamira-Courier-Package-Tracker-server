@@ -10,8 +10,15 @@ const PackageSearchableFields = [
 ];
 
 const createPackage = async (data: IPackage) => {
+  console.log('data', data);
+
   const packageId = await generatePackageId();
-  return Package.create({ ...data, packageId });
+  console.log('packageId', packageId);
+  const packageData = { ...data, packageId };
+  console.log(packageData);
+  const result = await Package.create(packageData);
+  console.log(result);
+  return result;
 };
 
 const getAllPackages = async (query: Record<string, unknown>) => {
@@ -24,6 +31,7 @@ const getAllPackages = async (query: Record<string, unknown>) => {
 
   const data = await packageQuery.modelQuery;
   const meta = await packageQuery.countTotal();
+
   return {
     data,
     meta,

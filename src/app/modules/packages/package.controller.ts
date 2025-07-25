@@ -4,6 +4,7 @@ import sendResponse from '../../utils/sendResponse';
 import { PackageServices } from './package.service';
 
 const createPackage = catchAsync(async (req, res) => {
+  console.log('req.body', req.body);
   const result = await PackageServices.createPackage(req.body);
   sendResponse(res, {
     statusCode: httpStatus.CREATED,

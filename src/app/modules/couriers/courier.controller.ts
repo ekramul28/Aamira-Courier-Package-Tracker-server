@@ -3,6 +3,15 @@ import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { CourierServices } from './courier.service';
 
+export const createCourier = catchAsync(async (req, res) => {
+  const result = await CourierServices.createCourierIntoDB(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Courier created successfully',
+    data: result,
+  });
+});
 export const getAllCouriers = catchAsync(async (req, res) => {
   const result = await CourierServices.getAllCouriersFromDB(req.query);
   sendResponse(res, {

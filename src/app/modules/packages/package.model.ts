@@ -3,10 +3,11 @@ import { IPackage } from './package.interface';
 
 const packageSchema = new Schema<IPackage>(
   {
-    orderer_name: { type: String, required: true, index: true },
+    packageId: { type: String },
+    orderer_name: { type: String, required: true },
     home_address: { type: String, required: true },
     phone_number: { type: String, required: true },
-    status: { type: String, required: true, default: 'CREATED', index: true },
+    status: { type: String, default: 'CREATED' },
     lat: { type: Number, default: 0 },
     lon: { type: Number, default: 0 },
     eventTimestamp: { type: Date, default: null },
@@ -16,8 +17,6 @@ const packageSchema = new Schema<IPackage>(
   },
   {
     timestamps: true, // adds createdAt and updatedAt
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
   },
 );
 

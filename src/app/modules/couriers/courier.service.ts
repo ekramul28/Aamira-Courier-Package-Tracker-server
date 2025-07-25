@@ -1,9 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Courier } from './courier.model';
+import { User } from '../User/user.model';
 
-export const getAllCouriersFromDB = async (query: Record<string, unknown>) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createCourierIntoDB = async (payload: any) => {
+  payload.role = 'courier';
+  console.log('inservice', payload);
+  const isUserExists = await User.findOne({ email: payload.email });
+  if (isUserExists)
+    throw new AppError(httpStatus.BAD_REQUEST, 'Courier already exists');
+
+  const result = await Courier.create(payload);
+  return result;
+};
+const getAllCouriersFromDB = async (query: Record<string, unknown>) => {
   const courierQuery = new QueryBuilder(Courier.find(), query)
     .search(['name', 'id'])
     .filter()
@@ -16,16 +29,13 @@ export const getAllCouriersFromDB = async (query: Record<string, unknown>) => {
   return { result, meta };
 };
 
-export const getSingleCourierFromDB = async (id: string) => {
+const getSingleCourierFromDB = async (id: string) => {
   const result = await Courier.findById(id);
   if (!result) throw new AppError(httpStatus.NOT_FOUND, 'Courier not found');
   return result;
 };
 
-export const updateCourierIntoDB = async (
-  id: string,
-  payload: Partial<any>,
-) => {
+const updateCourierIntoDB = async (id: string, payload: Partial<any>) => {
   const result = await Courier.findByIdAndUpdate(id, payload, {
     new: true,
     runValidators: true,
@@ -34,7 +44,7 @@ export const updateCourierIntoDB = async (
   return result;
 };
 
-export const deleteCourierFromDB = async (id: string) => {
+const deleteCourierFromDB = async (id: string) => {
   const result = await Courier.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -49,4 +59,5 @@ export const CourierServices = {
   getSingleCourierFromDB,
   updateCourierIntoDB,
   deleteCourierFromDB,
+  createCourierIntoDB,
 };
