@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+
 export type PackageStatus =
   | 'CREATED'
   | 'PICKED_UP'
@@ -10,6 +12,7 @@ export type PackageStatus =
 export interface IPackage {
   packageId?: string;
   status: PackageStatus;
+  courier_id: ObjectId;
   lat?: number;
   lon?: number;
   eventTimestamp?: Date;

@@ -32,7 +32,7 @@ router.post(
 
 router.get(
   '/me',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin),
+  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.courier),
   UserControllers.getMe,
 );
 

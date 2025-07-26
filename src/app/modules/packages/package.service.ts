@@ -2,6 +2,7 @@ import { Package } from './package.model';
 import { IPackage } from './package.interface';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { generatePackageId } from './package.utils';
+import mongoose from 'mongoose';
 
 const PackageSearchableFields = [
   'packageName',
@@ -13,11 +14,20 @@ const createPackage = async (data: IPackage) => {
   console.log('data', data);
 
   const packageId = await generatePackageId();
-  console.log('packageId', packageId);
-  const packageData = { ...data, packageId };
-  console.log(packageData);
+
+  const packageData = {
+    ...data,
+    packageId,
+    courier_id: new mongoose.Types.ObjectId(
+      data.courier_id as unknown as string,
+    ),
+  };
+
+  console.log('packageData', packageData);
+
   const result = await Package.create(packageData);
-  console.log(result);
+  console.log('Saved Package:', result);
+
   return result;
 };
 

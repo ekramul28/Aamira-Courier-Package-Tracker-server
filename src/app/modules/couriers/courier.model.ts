@@ -1,4 +1,4 @@
-import { Schema, model, Types } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 export interface ICourier {
   name: string;
@@ -9,28 +9,18 @@ export interface ICourier {
   isDeleted: boolean;
 }
 
-const courierSchema = new Schema<ICourier>({
-  // id: { type: String, required: true, unique: true },
-
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true, select: false },
-  role: { type: String, required: true, default: 'courier' },
-  status: { type: String, enum: ['active', 'inactive'], default: 'active' },
-  isDeleted: { type: Boolean, default: false },
-});
-
-courierSchema.pre('find', function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-courierSchema.pre('findOne', function (next) {
-  this.find({ isDeleted: { $ne: true } });
-  next();
-});
-courierSchema.pre('aggregate', function (next) {
-  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
-  next();
-});
+const courierSchema = new Schema<ICourier>(
+  {
+    name: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    role: { type: String, default: 'courier' },
+    status: { type: String, enum: ['active', 'inactive'], default: 'active' },
+    isDeleted: { type: Boolean, default: false },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 export const Courier = model<ICourier>('Courier', courierSchema);

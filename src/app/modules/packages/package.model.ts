@@ -5,6 +5,7 @@ const packageSchema = new Schema<IPackage>(
   {
     packageId: { type: String },
     orderer_name: { type: String, required: true },
+    courier_id: { type: Schema.Types.ObjectId, ref: 'Courier' },
     home_address: { type: String, required: true },
     phone_number: { type: String, required: true },
     status: { type: String, default: 'CREATED' },

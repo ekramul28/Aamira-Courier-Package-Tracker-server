@@ -12,6 +12,18 @@ export const createCourier = catchAsync(async (req, res) => {
     data: result,
   });
 });
+export const getMyPackage = catchAsync(async (req, res) => {
+  const id = req.params.id;
+  const result = await CourierServices.getMyPackageFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Couriers package retrieved successfully',
+
+    data: result,
+  });
+});
+
 export const getAllCouriers = catchAsync(async (req, res) => {
   const result = await CourierServices.getAllCouriersFromDB(req.query);
   sendResponse(res, {

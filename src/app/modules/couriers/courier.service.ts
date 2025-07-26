@@ -3,16 +3,17 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 import { Courier } from './courier.model';
+import { Package } from '../packages/package.model';
 import { User } from '../User/user.model';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const createCourierIntoDB = async (payload: any) => {
-  payload.role = 'courier';
   console.log('inservice', payload);
-  const isUserExists = await User.findOne({ email: payload.email });
-  if (isUserExists)
-    throw new AppError(httpStatus.BAD_REQUEST, 'Courier already exists');
-
+  await User.create({
+    email: payload.email,
+    password: payload.password,
+    role: 'courier',
+  });
   const result = await Courier.create(payload);
   return result;
 };
@@ -27,6 +28,11 @@ const getAllCouriersFromDB = async (query: Record<string, unknown>) => {
   const result = await courierQuery.modelQuery;
   const meta = await courierQuery.countTotal();
   return { result, meta };
+};
+
+const getMyPackageFromDB = async (id: string) => {
+  const result = await Package.find({ courier_id: id });
+  return result;
 };
 
 const getSingleCourierFromDB = async (id: string) => {
@@ -60,4 +66,5 @@ export const CourierServices = {
   updateCourierIntoDB,
   deleteCourierFromDB,
   createCourierIntoDB,
+  getMyPackageFromDB,
 };

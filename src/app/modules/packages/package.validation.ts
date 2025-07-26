@@ -7,6 +7,7 @@ export const createPackageValidationSchema = z.object({
     orderer_name: z.string().min(1, 'Orderer name is required'),
     home_address: z.string().min(1, 'Home address is required'),
     phone_number: z.string().min(1, 'Phone number is required'),
+    courier_id: z.string().min(1, 'Phone number is required'),
     status: z
       .enum([
         'CREATED',

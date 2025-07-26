@@ -41,7 +41,12 @@ router.get(
 
 router.patch(
   '/:packageId',
-  auth(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.dispatcher),
+  auth(
+    USER_ROLE.superAdmin,
+    USER_ROLE.admin,
+    USER_ROLE.dispatcher,
+    USER_ROLE.courier,
+  ),
   validateRequest(updatePackageValidationSchema),
   PackageControllers.updatePackage,
 );

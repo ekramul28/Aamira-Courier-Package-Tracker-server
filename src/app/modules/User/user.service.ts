@@ -10,6 +10,7 @@ import { Admin } from '../Admin/admin.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
 import { generateAdminId } from './user.utils';
+import { Courier } from '../couriers/courier.model';
 
 const createAdminIntoDB = async (
   file: any,
@@ -75,6 +76,9 @@ const getMe = async (userId: string, role: string) => {
 
   if (role === 'admin') {
     result = await Admin.findOne({ id: userId }).populate('user');
+  }
+  if (role === 'courier') {
+    result = await Courier.findOne({ _id: userId });
   }
 
   return result;

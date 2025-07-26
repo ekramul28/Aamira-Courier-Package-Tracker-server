@@ -7,6 +7,7 @@ import {
   updateCourier,
   deleteCourier,
   createCourier,
+  getMyPackage,
 } from './courier.controller';
 import { USER_ROLE } from '../User/user.constant';
 
@@ -16,6 +17,11 @@ router.post(
   '/',
   auth(USER_ROLE.dispatcher, USER_ROLE.superAdmin),
   createCourier,
+);
+router.get(
+  '/packages/:id',
+  auth(USER_ROLE.dispatcher, USER_ROLE.superAdmin, USER_ROLE.courier),
+  getMyPackage,
 );
 router.get(
   '/',
